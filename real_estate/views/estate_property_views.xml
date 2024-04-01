@@ -1,0 +1,269 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+
+  <!-- 
+  ====================
+  ESTATE_PROPERTY
+  ====================
+  -->
+  <!--____________________________________________________Vista de Formulario-->
+  <record id='estate_property_view_form' model='ir.ui.view'>
+    <field name="name">EstateProperty.form</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+      <form string="Estate property" editable="bottom">
+        <sheet>
+          <div class="oe_title mb32">
+            <label for="name" />
+            <h1>
+              <field name="name" class="mb16" placeholder="Property name..." />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="tag_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
+              <field name="type_id" placeholder="Tipo" options='{"no_create": True}'/>
+              <field name="post_code" />
+              <field name="date_availability"/>
+            </group>
+            <group>
+              <field name="expected_price"/>
+              <field name="selling_price"/>
+            </group>
+          </group>
+          <notebook colspan="4">
+            <page string="Description">
+              <group>
+                <group>
+                  <field name="description" />
+                  <field name="bedrooms" />
+                  <field name="living_area" />
+                  <field name="facades_area" />
+                </group>
+                <group>
+                  <field name="garage"/>
+                  <field name="garden"/>
+                  <field name="garden_area"/>
+                  <field name="garden_orientation"/>
+                </group>
+              </group>
+            </page>
+            <page string="Offer">
+              <field name="offer_ids">
+                <tree>
+                  <field name="price"/>
+                  <field name="status"/>
+                  <field name="partner_id"/>
+                </tree>
+                <form>
+                  <group>
+                    <group>
+                      <field name="price"/>
+                      <field name="status"/>
+                    </group>
+                    <group>
+                      <field name="partner_id"/>
+                    </group>
+                  </group>
+                </form>
+              </field>
+            </page>
+            <page string="Other info">
+            </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id='estate_property_view_tree' model='ir.ui.view'>
+    <field name="name">EstateProperty.tree</field>
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+      <tree string="Estate properties" decoration-info="state=='new'">
+        <field name="name" />
+        <field name="post_code" />
+        <field name="bedrooms" />
+        <field name="living_area" />
+        <field name="expected_price" />
+        <field name="selling_price" />
+        <field name="state" widget="badge" decoration-danger="state == 'new'" decoration-warning="state in ['offer_received','offer_accepted']"/>
+      </tree>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id="estate_property_view_search" model="ir.ui.view">
+    <field name="model">estate.property</field>
+    <field name="arch" type="xml">
+      <search>
+        <filter name="f_state_new" string="Nuevo" domain="[('state','=','new')]" />
+        <filter name="f_state_offer_received" string="Offer reveiced" domain="[('state','=','offer_received')]" />
+        <field name="name" />
+        <field name="post_code" />
+        <field name="bedrooms" />
+        <field name="living_area" />
+        <field name="expected_price" />
+        <field name="selling_price" />
+        <group expand="1" string="Group By">
+          <filter name="g_post_code" string="Post Code" domain="[]" context="{'group_by':'post_code'}" />
+          <filter name="g_state" string="State" domain="[]" context="{'group_by':'state'}" />
+        </group>
+      </search>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id='estate_property_action' model='ir.actions.act_window'>
+    <field name="name">Estate properties</field>
+    <field name="res_model">estate.property</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+  Create a new Estate property
+      </p>
+      <p>
+  Description
+      </p>
+    </field>
+  </record>
+
+
+  <!-- 
+  ====================
+  ESTATE.PROPERTY.TAG
+  ====================
+  -->
+  <!--____________________________________________________Vista de Formulario-->
+  <record id='estate_property_tag_view_form' model='ir.ui.view'>
+    <field name="name">EstatePropertyTag.form</field>
+    <field name="model">estate.property.tag</field>
+    <field name="arch" type="xml">
+      <form string="Tags" editable="bottom">
+        <!--<header></header> -->
+        <sheet>
+          <div class="oe_title mb32">
+            <label for="name" />
+            <h1>
+              <field name="name" default_focus="1" class="mb16" placeholder="Name..." />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="color" widget="color_picker"/>
+            </group>
+            <group></group>
+          </group>
+          <separator colspan="4" />
+          <label for="description" colspan="4"/>
+          <field name="description" nolabel="1" colspan="4" placeholder="Description..." />
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id='estate_property_tag_view_tree' model='ir.ui.view'>
+    <field name="name">EstatePropertyTag.tree</field>
+    <field name="model">estate.property.tag</field>
+    <field name="arch" type="xml">
+      <tree string="Tags">
+        <field name="color" widget="color_picker"/>
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id="estate_property_tag_view_search" model="ir.ui.view">
+    <field name="model">estate.property.tag</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" />
+        <group expand="1" string="Group By"></group>
+      </search>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id='estate_property_tag_action' model='ir.actions.act_window'>
+    <field name="name">Tags</field>
+    <field name="res_model">estate.property.tag</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+  Create a new Tags
+      </p>
+      <p>
+  Description
+      </p>
+    </field>
+  </record>
+
+
+  <!-- 
+  ====================
+  ESTATE.PROPERTY.TYPE
+  ====================
+  -->
+  <!--____________________________________________________Vista de Formulario-->
+  <record id='estate_property_type_view_form' model='ir.ui.view'>
+    <field name="name">EstatePropertyType.form</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <form string="Type" editable="bottom">
+        <!--<header></header> -->
+        <sheet>
+          <div class="oe_title mb32">
+            <label for="name" />
+            <h1>
+              <field name="name" default_focus="1" class="mb16" placeholder="Name..." />
+            </h1>
+          </div>
+          <group>
+            <group>
+              <field name="description"/>
+            </group>
+            <group></group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id='estate_property_type_view_tree' model='ir.ui.view'>
+    <field name="name">EstatePropertyType.tree</field>
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <tree string="Types">
+        <field name="name" />
+      </tree>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id="estate_property_type_view_search" model="ir.ui.view">
+    <field name="model">estate.property.type</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="name" />
+        <group expand="1" string="Group By"></group>
+      </search>
+    </field>
+  </record>
+  <!--____________________________________________________Vista de Arbol-->
+  <record id='estate_property_type_action' model='ir.actions.act_window'>
+    <field name="name">Types</field>
+    <field name="res_model">estate.property.type</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="o_view_nocontent_smiling_face">
+  Create a new Type
+      </p>
+      <p>
+  Description
+      </p>
+    </field>
+  </record>
+
+
+  <menuitem name="Estate property" id="estate_property_base_menu"/>
+  <!-- ESTATE PROPERTY -->
+  <menuitem action="real_estate.estate_property_action" id="estate_property_menu" parent="estate_property_base_menu" sequence="1" />
+  <!-- Type -->
+  <menuitem action="estate_property_type_action" id="estate_property_type_menu" parent="estate_property_base_menu" sequence="2"/>
+  <!-- Tags -->
+  <menuitem action="estate_property_tag_action" id="estate_property_tag_menu" parent="estate_property_base_menu" sequence="3"/>
+</odoo>
